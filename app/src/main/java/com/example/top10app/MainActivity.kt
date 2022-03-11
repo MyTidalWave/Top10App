@@ -4,24 +4,17 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStreamReader
 import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import kotlin.math.log
-
-
 
 class FeedEntry {
     var name: String = ""
     var artist: String = ""
     var releaseDate: String = ""
     var summary: String = ""
-    var imageURL: String = ""
+    var imageUrl: String = ""
 
     override fun toString(): String {
         return """
@@ -29,7 +22,7 @@ class FeedEntry {
             artist = $artist
             releaseDate = $releaseDate
             summary = $summary
-            imageURL = $imageURL
+            imageUrl = $imageUrl
         """.trimIndent()
     }
 }
@@ -44,18 +37,17 @@ class MainActivity : AppCompatActivity() {
 
         val downloadData = DownloadData()
         downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml")
-        Log.d(TAG, "onCreate Done")
-
+        Log.d(TAG, "onCreate DONE")
     }
 
-    companion object{
+    companion object {
         private class DownloadData : AsyncTask<String, Void, String>() {
-            private val TAG = "Downlowad"
+            private val TAG = "DownloadData"
 
             override fun doInBackground(vararg url: String?): String {
                 Log.d(TAG, "doInBackground")
                 val rssFeed = downloadXML(url[0])
-                if(rssFeed.isEmpty()){
+                if (rssFeed.isEmpty()) {
                     Log.e(TAG, "doInBackground: failed")
                 }
                 Log.d(TAG, rssFeed)
@@ -70,17 +62,17 @@ class MainActivity : AppCompatActivity() {
             }
 
             private fun downloadXML(urlPath: String?): String {
-               try{
-                   return  URL(urlPath).readText()
-               } catch (e: Exception){
-                   val errorMessage: String = when (e){
-                       is MalformedURLException -> "downloadXML: Invalid URL ${e.message}"
-                       is IOException -> "downloadXML: IOException reading dT ${e.message}"
-                       else -> "downloadXML: Unknown Error ${e.message}"
-                   }
-                   Log.e(TAG, errorMessage)
+                try {
+                    return URL(urlPath).readText()
+                } catch (e: Exception) {
+                    val errorMessage: String = when (e) {
+                        is MalformedURLException -> "downloadXML: Invalid URL ${e.message}"
+                        is IOException -> "downloadXML: IOException reading data ${e.message}"
+                        else -> "downloadXML: Unknown Error ${e.message}"
+                    }
+                    Log.e(TAG, errorMessage)
 
-               }
+                }
                 return ""
             }
         }
